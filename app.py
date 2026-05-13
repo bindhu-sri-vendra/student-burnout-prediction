@@ -73,9 +73,13 @@ st.divider()
 
 # Sidebar
 st.sidebar.header("About Project")
+st.sidebar.divider()
 st.sidebar.write("""
 Stress Lens is a machine learning based burnout prediction system designed to analyze academic, emotional, and lifestyle factors that may contribute to student burnout.
+
+----- Created by Bindhu 🖤 -----
 """)
+st.sidebar.footer
 # Input Section
 st.header("Enter Student Details")
 

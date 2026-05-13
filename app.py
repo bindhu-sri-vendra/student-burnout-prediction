@@ -79,7 +79,7 @@ Stress Lens is a machine learning based burnout prediction system designed to an
 
 ----- Created by Bindhu 🖤 -----
 """)
-st.sidebar.footer
+
 # Input Section
 st.header("Enter Student Details")
 

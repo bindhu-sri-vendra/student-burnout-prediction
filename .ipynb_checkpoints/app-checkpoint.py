@@ -11,6 +11,50 @@ st.set_page_config(
     layout="centered"
 )
 
+#custom css
+st.markdown("""
+<style>
+
+/* ================= BUTTON ================= */
+
+div.stButton > button {
+    background-color: #4EA8FF !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 18px !important;
+}
+
+div.stButton > button:hover {
+    background-color: #3399FF !important;
+    color: white !important;
+}
+
+/* ================= SLIDER ACTIVE TRACK ================= */
+
+.stSlider div[data-baseweb="slider"] > div > div > div {
+    background-color: #4EA8FF !important;
+}
+
+/* ================= SLIDER HANDLE ================= */
+
+.stSlider div[role="slider"] {
+    background-color: #4EA8FF !important;
+    border-color: #4EA8FF !important;
+}
+
+/* ================= SLIDER VALUE TEXT ================= */
+
+.stSlider div[data-testid="stThumbValue"] {
+    color: #4EA8FF !important;
+    font-weight: bold !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # Load Model
 model = joblib.load('burnout_model.pkl')
 
@@ -45,7 +89,7 @@ with col1:
     depression_score = st.slider("Depression Score", 0, 10, 5)
 
 with col2:
-    sleep_hours = st.slider("Sleep Hours", 0, 12, 6)
+    sleep_hours = st.slider("Sleep Hours", 0, 10, 5)
     physical_activity = st.slider("Physical Activity", 0, 10, 5)
     social_support = st.slider("Social Support", 0, 10, 5)
     financial_stress = st.slider("Financial Stress", 0, 10, 5)
@@ -87,12 +131,11 @@ if st.button("Predict Burnout"):
     prediction = model.predict(user_data)[0]
 
     # Layout for Chart + Suggestions
-    result_col1, result_col2 = st.columns([1, 1])
+    result_col1,spacer, result_col2 = st.columns([1,0.2, 1])
 
     # Burnout Levels
     if prediction == 0:
         burnout_label = "Low Burnout"
-        burnout_value = 25
 
         suggestions = [
             "Maintain a healthy sleep schedule",
@@ -103,7 +146,6 @@ if st.button("Predict Burnout"):
 
     elif prediction == 1:
         burnout_label = "Moderate Burnout"
-        burnout_value = 60
 
         suggestions = [
             "Reduce excessive study pressure",
@@ -114,7 +156,6 @@ if st.button("Predict Burnout"):
 
     else:
         burnout_label = "High Burnout"
-        burnout_value = 90
 
         suggestions = [
             "Prioritize mental health and rest",
@@ -123,54 +164,31 @@ if st.button("Predict Burnout"):
             "Consult a counselor or mental health professional"
         ]
 
-    # Donut Chart
+
+    # burnout Chart
     with result_col1:
-
-        st.subheader("Burnout Analysis")
-
-        chart_html = f"""
-        <div style="display:flex; justify-content:center; align-items:center; margin-top:20px;">
-            <div style="
-                width:220px;
-                height:220px;
-                border-radius:50%;
-                background: conic-gradient(
-                    #FF5A5F {burnout_value}%,
-                    #EAEAEA {burnout_value}%
-                );
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
-            ">
-                <div style="
-                    width:140px;
-                    height:140px;
-                    background:white;
-                    border-radius:50%;
-                    display:flex;
-                    flex-direction:column;
-                    justify-content:center;
-                    align-items:center;
-                    font-weight:bold;
-                    font-size:22px;
-                ">
-                    {burnout_value}%
-                </div>
-            </div>
-        </div>
-        """
-
-        st.markdown(chart_html, unsafe_allow_html=True)
-        st.markdown(f"### {burnout_label}")
+        if prediction == 0:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.image(
+                os.path.join(os.getcwd(), 'static', 'low burnout.png')
+                )
+        elif prediction == 1:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.image(
+                os.path.join(os.getcwd(), 'static', 'moderate burnout.png')
+                )
+        else:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.image(
+                os.path.join(os.getcwd(), 'static', 'high burnout.png')
+                )
 
     # Suggestions Section
     with result_col2:
 
-        st.subheader("Suggestions")
-
+        st.subheader("**Suggestions**")
         for tip in suggestions:
-            st.write(f"✅ {tip}")
+            st.write(f"✔️ {tip}")
 
 st.divider()
 
